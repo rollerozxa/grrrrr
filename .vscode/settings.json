@@ -1,0 +1,6 @@
+{
+	"C_Cpp.default.includePath": [
+		"/opt/devkitpro/portlibs/ppc/include/",
+		"/opt/devkitpro/libogc/include/"
+	]
+}
