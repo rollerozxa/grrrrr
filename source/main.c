@@ -7,6 +7,8 @@
 #include <ogc/stm.h>
 #include <math.h>
 
+#include "hsv2rgb.h"
+
 // Font
 #include "FreeMonoBold_ttf.h"
 
@@ -28,57 +30,34 @@ int main(int argc, char **argv) {
 
 	double timer = 0;
 
+	char text[] = "Hello Wii Homebrew World...";
+
+	char printchar[2] = {0,0};
+
 	while (1) {
 		WPAD_ScanPads();
 
 		if (WPAD_ButtonsDown(0) & WPAD_BUTTON_HOME)
 			break;
 
-		char text[]   = "Hello Wii Homebrew World...";
-
-		int gay[] = { // THE GAY ARRAY
-			0xDC0404FF,
-			0xF78801FF,
-			0xF6E701FF,
-			0x007D26FF,
-			0x004CF8FF,
-			0x710783FF
-		};
-
-		int gayindex = 0; // THE GAY INDEX
-
 		for (size_t i = 0; i < sizeof(text)-1; i++) {
-			char tmp[] = {text[i], 0};
-			char tmp2[] = {'-', 0};
-
 			int xOffset = (i*15);
 			int yOffset = (int)(sin(timer/15+i)*10);
 
-			GRRLIB_PrintfTTF(
-				24+xOffset,
-				48+yOffset,
-				myFont, tmp, 24,
-				gay[gayindex%6]
-			);
+			int color = hsv2rgb_grr(( ((int)timer*2) + (i*10) ) % 360, 100, 100);
 
-			GRRLIB_PrintfTTF(
-				24+xOffset,
-				24+yOffset,
-				myFont, tmp2, 24,
-				gay[gayindex%6]
-			);
+			for (size_t j = 0; j < 3; j++) {
+				if (j == 1) printchar[0] = text[i];
+				else		printchar[0] = '=';
 
-			GRRLIB_PrintfTTF(
-				24+xOffset,
-				72+yOffset,
-				myFont, tmp2, 24,
-				gay[gayindex%6]
-			);
+				int x = 680+xOffset-timer;
+				int y = (24+j*24)+yOffset;
 
-			gayindex++;
+				GRRLIB_PrintfTTF(x, y, myFont, printchar, 24, color);
+			}
 		}
 
-		GRRLIB_DrawImg(250, 150, blaahaj, 0, 1, 1, 0xFFFFFFFF);
+		//GRRLIB_DrawImg(250, 150, blaahaj, 0, 1, 1, 0xFFFFFFFF);
 
 
 		//GRRLIB_PrintfTTF(24, 24, myFont, "Hello Wii...", 24, 0xFFFFFFFF);
